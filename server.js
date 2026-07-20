@@ -171,6 +171,12 @@ app.post('/api/speedtest/upload', async (req, res) => {
 // 5. Ping & Jitter API
 app.get('/api/ping-test', async (req, res) => {
   const target = req.query.target || '1.1.1.1';
+  
+  // Input Sanitization: Only allow valid hostnames or IP addresses (alphanumeric, dots, dashes)
+  if (!/^[a-zA-Z0-9.-]+$/.test(target) || target.length > 253) {
+    return res.status(400).json({ success: false, error: 'Invalid target hostname or IP address' });
+  }
+
   try {
     // Run 8 pings to calculate jitter and packet loss
     const pingRaw = await runCommand(`ping -n 8 ${target}`);
@@ -185,6 +191,11 @@ app.get('/api/ping-test', async (req, res) => {
 app.get('/api/traceroute', (req, res) => {
   const target = req.query.target || '1.1.1.1';
   
+  // Input Sanitization: Only allow valid hostnames or IP addresses
+  if (!/^[a-zA-Z0-9.-]+$/.test(target) || target.length > 253) {
+    return res.status(400).json({ success: false, error: 'Invalid target hostname or IP address' });
+  }
+
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
@@ -397,9 +408,9 @@ app.get('/api/dns-leak', async (req, res) => {
   }
 });
 
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server is running at http://localhost:${PORT}`);
+// Start the server (bind strictly to 127.0.0.1 for local security)
+app.listen(PORT, '127.0.0.1', () => {
+  console.log(`Server is running at http://127.0.0.1:${PORT}`);
 });
 
 /* ==========================================
