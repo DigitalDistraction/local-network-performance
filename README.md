@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="logo.jpg" width="160" alt="Distractsun Logo" style="border-radius: 50%;">
+  <img src="logo.png" width="180" alt="Distractsun Logo">
 </p>
 
 # ⚡ HyperSpeed Local Network Performance Auditor
