@@ -145,6 +145,11 @@ function renderDashboardOverview() {
   const ispVal = systemData.external.isp || 'Frontier Communications';
   document.getElementById('dash-isp').innerText = ispVal;
   
+  const headerTitle = document.getElementById('header-app-title');
+  if (headerTitle) {
+    headerTitle.value = `${ispVal} Network Auditor`;
+  }
+  
   const publicIpv4 = systemData.external.query || 'Unknown';
   let ipCardHtml = `IPv4: ${publicIpv4}`;
   if (publicIpv6) {
@@ -946,20 +951,20 @@ function evaluateRecommendations() {
     });
   }
 
-  // Tip 4: Frontier Fiber Speed Verification
+  // Tip 4: Fiber Speed Verification
+  const ispName = (systemData && systemData.external && systemData.external.isp) ? systemData.external.isp : 'High-Speed Internet';
   if (speedTestData.download > 0) {
-    // Check if Frontier Fiber plan speed matches. We assume they have standard 500Mbps, 1Gbps, or 2Gbps plans.
     if (speedTestData.download < 200) {
       recs.push({
         priority: 'high',
         title: 'Symmetric Throughput Bottleneck',
-        text: `Your download speed is measured at ${speedTestData.download} Mbps. Frontier Fiber is symmetric. If speed is low, bypass your Wi-Fi by testing with an Ethernet cable to confirm if the bottleneck is wireless range or router hardware performance.`
+        text: `Your download speed is measured at ${speedTestData.download} Mbps. High-speed Fiber connections are symmetric. If speed is lower than expected, test with a direct Ethernet cable to confirm whether the bottleneck is wireless range or router hardware performance.`
       });
     } else {
       recs.push({
         priority: 'info',
-        title: 'Excellent Frontier Fiber Performance',
-        text: `Your symmetric speed test of ${speedTestData.download} Mbps download and ${speedTestData.upload} Mbps upload verifies high-speed Fiber provisioning. Keep Nest Wifi Pro firmware updated to maintain stable traffic management.`
+        title: `Excellent ${ispName} Performance`,
+        text: `Your speed test of ${speedTestData.download} Mbps download and ${speedTestData.upload} Mbps upload verifies high-speed provisioning on ${ispName}. Keep router firmware updated to maintain stable traffic management.`
       });
     }
   }
@@ -990,7 +995,7 @@ function evaluateRecommendations() {
     container.innerHTML = `
       <div class="empty-state">
         <i data-lucide="shield-check"></i>
-        <p>No issues detected! Your Nest Wifi Pro and Frontier Fiber configuration is running optimally.</p>
+        <p>No issues detected! Your router and ${ispName} connection are running optimally.</p>
       </div>
     `;
     lucide.createIcons();
