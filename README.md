@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="logo.jpg" width="160" alt="Distractsun Logo" style="border-radius: 50%;">
+</p>
+
 # ⚡ HyperSpeed Local Network Performance Auditor
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)
