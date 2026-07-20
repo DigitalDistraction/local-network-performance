@@ -1,5 +1,11 @@
 # ⚡ HyperSpeed Local Network Performance Auditor
 
+![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)
+![Node.js](https://img.shields.io/badge/Node.js-v16%2B-blue.svg)
+![Platform](https://img.shields.io/badge/Platform-Windows%2010%2F11-0078D6.svg)
+![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
+![Version](https://img.shields.io/badge/Version-v1.0.0-orange.svg)
+
 A modern, high-performance web dashboard and diagnostic utility designed to audit local network hardware, internet throughput, DNS resolution latency, smart home mesh devices, and bufferbloat.
 
 Built with **Node.js, Express, Chart.js, Lucide Icons, and Vanilla CSS Glassmorphism**.
@@ -84,6 +90,12 @@ graph TD
 | `/api/iot-scan` | `GET` | Transmits mDNS query packets to discover Thread, Matter, and Cast nodes. |
 | `/api/traceroute` | `GET` | Streams real-time path hops using Server-Sent Events (SSE). |
 | `/api/history` | `GET / POST / DELETE` | Manages speed test history logs stored in `history.json`. |
+
+---
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/DigitalDistraction/local-network-performance/issues) or submit a Pull Request.
 
 ---
 
