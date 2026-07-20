@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HyperSpeed - Network Performance Diagnostics</title>
+  <!-- Google Fonts: Outfit for titles, JetBrains Mono for terminals/diagnostics -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <!-- App Shell -->
+  <div class="app-container">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo-icon">
+          <i data-lucide="zap"></i>
+        </div>
+        <div class="brand-text">
+          <h1>HyperSpeed</h1>
+          <span>Network Auditor</span>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <button class="nav-item active" data-tab="dashboard">
+          <i data-lucide="layout-dashboard"></i>
+          <span>Dashboard</span>
+        </button>
+        <button class="nav-item" data-tab="speedtest">
+          <i data-lucide="gauge"></i>
+          <span>Speed Test</span>
+        </button>
+        <button class="nav-item" data-tab="dns">
+          <i data-lucide="server-crash"></i>
+          <span>DNS Shootout</span>
+        </button>
+        <button class="nav-item" data-tab="wifi">
+          <i data-lucide="wifi"></i>
+          <span>Wi-Fi & Config</span>
+        </button>
+        <button class="nav-item" data-tab="traceroute">
+          <i data-lucide="git-commit"></i>
+          <span>Traceroute</span>
+        </button>
+        <button class="nav-item" data-tab="iot">
+          <i data-lucide="cpu"></i>
+          <span>IoT & Matter</span>
+        </button>
+      </nav>
+
+      <div class="connection-status-panel">
+        <div class="status-indicator online" id="global-status-indicator"></div>
+        <div class="status-details">
+          <p id="global-status-text">Connected</p>
+          <span id="quick-local-ip">Checking system...</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- Top Header -->
+      <header class="top-header">
+        <div class="search-bar">
+          <i data-lucide="search"></i>
+          <input type="text" placeholder="Nest Wifi Pro & Frontier Fiber Auditor" disabled>
+        </div>
+        <div class="user-profile">
+          <div class="system-tag">
+            <i data-lucide="monitor"></i>
+            <span>Windows 11</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- TAB 1: DASHBOARD -->
+      <section class="tab-pane active" id="tab-dashboard">
+        <div class="pane-header">
+          <h2>Overview Dashboard</h2>
+          <p>Real-time status of your Frontier Fiber & Google Nest Wifi Pro setup.</p>
+        </div>
+
+        <!-- Audit Readiness & Master Suite Controller -->
+        <div class="glass-card audit-readiness-banner" style="margin-bottom: 1.5rem;">
+          <div class="banner-top">
+            <div class="banner-title">
+              <h3>Diagnostic Audit Controller</h3>
+              <span class="badge" id="audit-progress-percent">25% Complete</span>
+            </div>
+            <div class="banner-actions" style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+              <button class="btn btn-primary" id="btn-run-full-audit">
+                <i data-lucide="zap"></i> Run Full Comprehensive Audit
+              </button>
+              <button class="btn btn-secondary" id="btn-export-audit">
+                <i data-lucide="download"></i> Export JSON Report
+              </button>
+            </div>
+          </div>
+          <div class="progress-bar-track" style="margin: 0.85rem 0 1rem 0;">
+            <div class="progress-bar-fill" id="audit-progress-bar" style="width: 25%;"></div>
+          </div>
+          <div class="audit-steps-pills">
+            <div class="step-pill done" id="pill-step-config">
+              <i data-lucide="check-circle-2"></i> <span>System Config</span>
+            </div>
+            <div class="step-pill pending" id="pill-step-speed">
+              <i data-lucide="circle"></i> <span>Speed & Bufferbloat</span>
+            </div>
+            <div class="step-pill pending" id="pill-step-dns">
+              <i data-lucide="circle"></i> <span>DNS Shootout</span>
+            </div>
+            <div class="step-pill pending" id="pill-step-leak">
+              <i data-lucide="circle"></i> <span>DNS Leak Check</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Stats Grid -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="card-icon cyan">
+              <i data-lucide="network"></i>
+            </div>
+            <div class="stat-info">
+              <h3>ISP Partner</h3>
+              <p class="stat-value" id="dash-isp">Detecting...</p>
+              <span id="dash-public-ip">IP: Fetching...</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="card-icon purple">
+              <i data-lucide="wifi-off"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Wi-Fi Connection</h3>
+              <p class="stat-value" id="dash-ssid">Detecting...</p>
+              <span id="dash-wifi-speed">Rate: -- Mbps</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="card-icon pink">
+              <i data-lucide="activity"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Gateway Ping</h3>
+              <p class="stat-value" id="dash-ping">-- ms</p>
+              <span id="dash-jitter">Jitter: -- ms</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="card-icon amber">
+              <i data-lucide="server"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Primary DNS</h3>
+              <p class="stat-value" id="dash-dns">Detecting...</p>
+              <span id="dash-dns-speed">Res: -- ms</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recommendations and Setup Audit -->
+        <div class="dashboard-details-row">
+          
+          <!-- Optimization Advice -->
+          <div class="glass-card recommendations-card">
+            <div class="card-header">
+              <h3><i data-lucide="sparkles"></i> Frontier + Nest Wifi Optimizations</h3>
+              <span class="badge" id="recs-count">0 Tips</span>
+            </div>
+            <div class="recommendations-list" id="recommendations-container">
+              <div class="empty-state">
+                <i data-lucide="shield-check"></i>
+                <p>Run network tests across the tabs to generate personalized performance advice.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick System Diagnostic Overview -->
+          <div class="glass-card router-card">
+            <div class="card-header">
+              <h3><i data-lucide="router"></i> Infrastructure Details</h3>
+            </div>
+            <div class="router-details-body">
+              <div class="detail-item">
+                <span>Nest Wifi Router Model</span>
+                <strong id="info-router-model">Nest Wifi Pro (Wi-Fi 6E)</strong>
+              </div>
+              <div class="detail-item">
+                <span>Wi-Fi Frequency Band</span>
+                <strong id="info-wifi-band">Detecting...</strong>
+              </div>
+              <div class="detail-item">
+                <span>Wi-Fi Channel</span>
+                <strong id="info-wifi-channel">--</strong>
+              </div>
+              <div class="detail-item">
+                <span>Signal Quality</span>
+                <div class="signal-bar-wrapper">
+                  <div class="signal-bar" id="info-signal-bar" style="width: 0%"></div>
+                  <strong id="info-wifi-signal">0%</strong>
+                </div>
+              </div>
+              <div class="detail-item">
+                <span>Default Gateway</span>
+                <strong id="info-gateway">--</strong>
+              </div>
+              <div class="detail-item">
+                <span>DHCP IP Assignment</span>
+                <strong id="info-dhcp">--</strong>
+              </div>
+            </div>
+            <button class="btn btn-secondary" id="btn-run-all-diag" style="margin-top: 1.5rem; width: 100%;">
+              <i data-lucide="refresh-cw"></i> Quick System & IP Refresh
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- TAB 2: SPEED TEST -->
+      <section class="tab-pane" id="tab-speedtest">
+        <div class="pane-header">
+          <h2>Internet Speed Test</h2>
+          <p>Measure download, upload speeds, and latency using Cloudflare CDNs.</p>
+        </div>
+
+        <div class="speedtest-layout">
+          <!-- Main speedtest gauges -->
+          <div class="glass-card gauge-container-card">
+            <div class="speed-gauges">
+              <!-- Download Gauge -->
+              <div class="gauge-box">
+                <span class="gauge-label">DOWNLOAD</span>
+                <div class="gauge-ring">
+                  <svg viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="45" class="bg"></circle>
+                    <circle cx="50" cy="50" r="45" class="progress" id="download-progress-ring" style="stroke-dashoffset: 283;"></circle>
+                  </svg>
+                  <div class="gauge-value" id="download-value">0</div>
+                </div>
+                <span class="gauge-unit">Mbps</span>
+              </div>
+
+              <!-- Upload Gauge -->
+              <div class="gauge-box">
+                <span class="gauge-label">UPLOAD</span>
+                <div class="gauge-ring">
+                  <svg viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="45" class="bg"></circle>
+                    <circle cx="50" cy="50" r="45" class="progress upload" id="upload-progress-ring" style="stroke-dashoffset: 283;"></circle>
+                  </svg>
+                  <div class="gauge-value" id="upload-value">0</div>
+                </div>
+                <span class="gauge-unit">Mbps</span>
+              </div>
+            </div>
+
+            <!-- Ping / Jitter / Loss row -->
+            <div class="speed-metrics-row">
+              <div class="metric-item">
+                <span class="lbl">Idle Ping</span>
+                <strong id="speed-ping">-- ms</strong>
+              </div>
+              <div class="metric-item">
+                <span class="lbl">Loaded Ping</span>
+                <strong id="speed-loaded-ping">-- ms</strong>
+              </div>
+              <div class="metric-item">
+                <span class="lbl">Bufferbloat</span>
+                <strong id="speed-bufferbloat-grade">--</strong>
+              </div>
+              <div class="metric-item">
+                <span class="lbl">Jitter</span>
+                <strong id="speed-jitter">-- ms</strong>
+              </div>
+              <div class="metric-item">
+                <span class="lbl">Packet Loss</span>
+                <strong id="speed-loss">--%</strong>
+              </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="speed-controls">
+              <button class="btn btn-large btn-primary" id="btn-start-speedtest">
+                <i data-lucide="play-circle"></i> Start Speed Test
+              </button>
+            </div>
+          </div>
+
+          <!-- Console logs -->
+          <div class="glass-card speedtest-log-card">
+            <div class="card-header">
+              <h3>Speed Test Diagnostics</h3>
+            </div>
+            <div class="terminal-log" id="speedtest-console">
+              <span class="log-line text-muted">Ready to initiate speed test...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Speed & Latency History Card -->
+        <div class="glass-card history-card" style="margin-top: 1.5rem;">
+          <div class="card-header">
+            <h3>Speed & Latency History</h3>
+            <button class="btn btn-secondary text-xs" id="btn-clear-history">Clear History</button>
+          </div>
+          <div class="history-layout">
+            <div class="chart-wrapper" style="height: 200px; position: relative;">
+              <canvas id="historyChart"></canvas>
+            </div>
+            <div class="history-table-wrapper" style="margin-top: 1rem;">
+              <table class="history-table">
+                <thead>
+                  <tr>
+                    <th>Timestamp</th>
+                    <th>Download</th>
+                    <th>Upload</th>
+                    <th>Idle Ping</th>
+                    <th>Loaded Ping</th>
+                    <th>Bufferbloat</th>
+                  </tr>
+                </thead>
+                <tbody id="history-table-body">
+                  <tr><td colspan="6" class="text-center text-muted">No speed tests recorded yet.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: DNS SHOOTOUT -->
+      <section class="tab-pane" id="tab-dns">
+        <div class="pane-header">
+          <h2>DNS Performance Shootout</h2>
+          <p>Test and compare domain name resolution speeds across several public DNS providers.</p>
+        </div>
+
+        <div class="dns-layout">
+          <!-- DNS Chart card -->
+          <div class="glass-card dns-chart-card">
+            <div class="card-header">
+              <h3>Resolution Speed (Lower is Better)</h3>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="dnsChart"></canvas>
+            </div>
+          </div>
+
+          <!-- DNS Config & Action -->
+          <div class="glass-card dns-actions-card">
+            <div class="card-header">
+              <h3>Resolve Benchmarks</h3>
+            </div>
+            <p class="text-sm">We query common websites (Google, Cloudflare, Netflix, YouTube) using each DNS server to find the fastest responder for your location.</p>
+            
+            <button class="btn btn-primary" id="btn-run-dns" style="width: 100%; margin-top: 1rem;">
+              <i data-lucide="swatchbook"></i> Benchmark DNS Servers
+            </button>
+
+            <!-- Table of DNS performance -->
+            <div class="dns-table-wrapper" style="margin-top: 1.5rem;">
+              <table class="dns-results-table">
+                <thead>
+                  <tr>
+                    <th>DNS Server</th>
+                    <th>IP Address</th>
+                    <th>Avg Latency</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="dns-results-tbody">
+                  <tr>
+                    <td colspan="4" class="text-center text-muted">No benchmark data. Click run.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- DNS Leak Test Card -->
+        <div class="glass-card dns-leak-card" style="margin-top: 1.5rem;">
+          <div class="card-header">
+            <h3>Active Upstream Resolver & DNS Leak Audit</h3>
+            <button class="btn btn-secondary text-xs" id="btn-run-dns-leak">
+              <i data-lucide="shield-search"></i> Run DNS Leak Check
+            </button>
+          </div>
+          <div class="dns-leak-results" id="dns-leak-container">
+            <div class="empty-state">
+              <i data-lucide="shield-alert"></i>
+              <p>Run a DNS leak check to verify whether your DNS requests are fulfilled by Cloudflare, Google, or your ISP.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: WI-FI & INTERFACE CONFIG -->
+      <section class="tab-pane" id="tab-wifi">
+        <div class="pane-header">
+          <h2>Adapter Configurations & WLAN Details</h2>
+          <p>Raw configurations fetched directly from Windows Netsh and Ipconfig commands.</p>
+        </div>
+
+        <div class="config-layout">
+          <div class="glass-card full-width">
+            <div class="tab-nav-sub">
+              <button class="sub-tab active" data-sub="ipconfig">IP Config (`ipconfig /all`)</button>
+              <button class="sub-tab" data-sub="wifi-details">Wi-Fi Link (`netsh wlan`)</button>
+            </div>
+
+            <!-- subpane 1: ipconfig -->
+            <div class="sub-pane active" id="sub-ipconfig">
+              <div class="adapter-list" id="adapters-accordion">
+                <div class="empty-state">
+                  <i data-lucide="server"></i>
+                  <p>Run diagnostics to pull interface configurations.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- subpane 2: netsh wlan -->
+            <div class="sub-pane" id="sub-wifi-details">
+              <div class="terminal-log raw-terminal" id="raw-wlan-log">
+                <span class="log-line text-muted">No Netsh WLAN interface details requested yet.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 5: TRACEROUTE -->
+      <section class="tab-pane" id="tab-traceroute">
+        <div class="pane-header">
+          <h2>Network Path Traceroute</h2>
+          <p>Trace the hops taken by network packets from your Nest Wifi Pro to public servers.</p>
+        </div>
+
+        <div class="traceroute-layout">
+          <div class="glass-card tracert-controls">
+            <div class="card-header">
+              <h3>Traceroute Controls</h3>
+            </div>
+            
+            <div class="form-group">
+              <label for="trace-target">Target Domain / IP</label>
+              <div class="input-action-group">
+                <input type="text" id="trace-target" value="1.1.1.1" placeholder="e.g. google.com or 1.1.1.1">
+                <button class="btn btn-primary" id="btn-start-trace">
+                  <i data-lucide="play"></i> Trace Path
+                </button>
+              </div>
+            </div>
+
+            <p class="text-xs text-muted">Using `-d` flag to skip DNS resolution and speed up execution, and `-h 15` to limit the depth of path tracing.</p>
+          </div>
+
+          <div class="glass-card tracert-results-card">
+            <div class="card-header">
+              <h3>Path Visualization Hops</h3>
+              <span class="status-indicator offline" id="tracert-status-indicator"></span>
+            </div>
+            <div class="hop-timeline" id="traceroute-timeline">
+              <div class="empty-state">
+                <i data-lucide="git-branch"></i>
+                <p>Run a traceroute to map local and external network gateway hops.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 6: IoT & MATTER -->
+      <section class="tab-pane" id="tab-iot">
+        <div class="pane-header">
+          <h2>IoT & Matter Mesh Auditor</h2>
+          <p>Scan your local Nest Wifi Pro network for Thread Border Routers, Matter devices, Google Cast nodes, and Apple HomeKit smart appliances via UDP multicast.</p>
+        </div>
+
+        <div class="iot-layout">
+          <div class="glass-card iot-controls">
+            <div class="card-header">
+              <h3>Mesh Scanner</h3>
+            </div>
+            <p class="text-sm">We transmit mDNS query packets targeting smart home endpoints over port 5353. This discovers Thread-enabled Nest hubs, Matter-certified smart plugs/lights, and Cast devices operating on your subnet.</p>
+            <button class="btn btn-primary btn-large" id="btn-scan-iot" style="width: 100%; margin-top: 1.5rem;">
+              <i data-lucide="scan"></i> Scan Local Smart Network
+            </button>
+          </div>
+
+          <div class="glass-card iot-results-card">
+            <div class="card-header">
+              <h3>Discovered IoT Assets</h3>
+              <span class="badge" id="iot-devices-count">0 Devices</span>
+            </div>
+            <div class="iot-devices-grid" id="iot-grid-container">
+              <div class="empty-state">
+                <i data-lucide="cpu"></i>
+                <p>Run a network scan to discover Thread, Matter, and Cast nodes.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
