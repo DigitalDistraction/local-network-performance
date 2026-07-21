@@ -9,6 +9,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/jpeg" href="logo.jpg">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b0c10">
   <link rel="stylesheet" href="style.css">
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -34,36 +36,33 @@
 
       <nav class="nav-menu">
         <button class="nav-item active" data-tab="dashboard">
-          <i data-lucide="layout-dashboard"></i>
-          <span>Dashboard</span>
+          <i data-lucide="layout-dashboard"></i> Overview
         </button>
         <button class="nav-item" data-tab="speedtest">
-          <i data-lucide="gauge"></i>
-          <span>Speed Test</span>
+          <i data-lucide="gauge"></i> Speed & Latency
         </button>
         <button class="nav-item" data-tab="dns">
-          <i data-lucide="server-crash"></i>
-          <span>DNS Shootout</span>
-        </button>
-        <button class="nav-item" data-tab="wifi">
-          <i data-lucide="wifi"></i>
-          <span>Wi-Fi & Config</span>
-        </button>
-        <button class="nav-item" data-tab="traceroute">
-          <i data-lucide="git-commit"></i>
-          <span>Traceroute</span>
+          <i data-lucide="globe"></i> DNS Benchmark
         </button>
         <button class="nav-item" data-tab="iot">
-          <i data-lucide="cpu"></i>
-          <span>IoT & Matter</span>
+          <i data-lucide="cpu"></i> IoT & Thread Mesh
+        </button>
+        <button class="nav-item" data-tab="traceroute">
+          <i data-lucide="route"></i> Traceroute
+        </button>
+        <button class="nav-item" data-tab="recommendations">
+          <i data-lucide="sparkles"></i> Optimization Engine
         </button>
       </nav>
 
-      <div class="connection-status-panel">
-        <div class="status-indicator online" id="global-status-indicator"></div>
-        <div class="status-details">
-          <p id="global-status-text">Connected</p>
-          <span id="quick-local-ip">Checking system...</span>
+      <div class="sidebar-footer">
+        <div class="status-indicator">
+          <span class="status-dot"></span>
+          <span class="status-label">System Active</span>
+        </div>
+        <div class="system-ip-card" style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-secondary);">
+          <div id="side-ipv4">IPv4: --</div>
+          <div id="side-ipv6" style="margin-top: 2px; word-break: break-all;">IPv6: --</div>
         </div>
       </div>
     </aside>
@@ -71,7 +70,7 @@
     <!-- Main Content Area -->
     <main class="main-content">
       
-      <!-- Top Header -->
+      <!-- Top Bar Header -->
       <header class="top-header">
         <div class="search-bar">
           <i data-lucide="search"></i>
@@ -85,12 +84,33 @@
         </div>
       </header>
 
-      <!-- TAB 1: DASHBOARD -->
-      <section class="tab-pane active" id="tab-dashboard">
-        <div class="pane-header">
-          <h2>Overview Dashboard</h2>
-          <p>Real-time status of your Frontier Fiber & Google Nest Wifi Pro setup.</p>
-        </div>
+      <!-- Dashboard View Panes -->
+      <div class="content-area">
+
+        <!-- TAB 1: DASHBOARD -->
+        <section class="tab-pane active" id="tab-dashboard">
+          <div class="pane-header">
+            <h2>Overview Dashboard</h2>
+            <p>Real-time status of your network performance & diagnostics.</p>
+          </div>
+
+          <!-- Active Device & Host Agent Awareness Banner -->
+          <div class="glass-card active-device-banner" style="margin-bottom: 1.25rem; padding: 0.85rem 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
+            <div class="device-info-item" style="display: flex; align-items: center; gap: 0.6rem;">
+              <i data-lucide="smartphone" id="client-device-icon" style="color: var(--accent-cyan);"></i>
+              <div>
+                <span style="font-size: 0.75rem; color: var(--text-muted); display: block;">Active Test Client</span>
+                <strong id="client-device-name" style="font-size: 0.9rem;">Detecting client...</strong>
+              </div>
+            </div>
+            <div class="device-info-item" style="display: flex; align-items: center; gap: 0.6rem;">
+              <i data-lucide="server" style="color: var(--accent-blue);"></i>
+              <div>
+                <span style="font-size: 0.75rem; color: var(--text-muted); display: block;">Host Diagnostics Agent</span>
+                <strong id="host-agent-name" style="font-size: 0.9rem;">Windows PC (Local Agent)</strong>
+              </div>
+            </div>
+          </div>
 
         <!-- Audit Readiness & Master Suite Controller -->
         <div class="glass-card audit-readiness-banner" style="margin-bottom: 1.5rem;">

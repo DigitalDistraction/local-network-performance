@@ -6,9 +6,10 @@ let speedTestData = { download: 0, upload: 0, ping: 0, loadedPing: 0, bufferbloa
 let dnsBenchData = [];
 let auditStatus = { config: false, speed: false, dns: false, leak: false };
 
-// Initialize Lucide Icons
+// Initialize Lucide Icons & Device Detection
 document.addEventListener('DOMContentLoaded', () => {
   lucide.createIcons();
+  detectClientDevice();
   initTabs();
   initSubTabs();
   fetchDiagnostics(true); // Quiet fetch on load
@@ -148,6 +149,13 @@ function renderDashboardOverview() {
   const headerTitle = document.getElementById('header-app-title');
   if (headerTitle) {
     headerTitle.value = `${ispVal} Network Auditor`;
+  }
+
+  const hostElem = document.getElementById('host-agent-name');
+  if (hostElem && primaryAdapter) {
+    const pcIp = primaryAdapter.details['IPv4 Address'] || '127.0.0.1';
+    const pcDesc = primaryAdapter.details.Description || 'Windows PC';
+    hostElem.innerText = `${pcDesc} (${pcIp})`;
   }
   
   const publicIpv4 = systemData.external.query || 'Unknown';
@@ -1447,6 +1455,45 @@ async function runFullAudit() {
     lucide.createIcons();
   }
 }
+
+/* ==========================================
+   CLIENT DEVICE AWARENESS & PWA DETECTION
+   ========================================== */
+
+function detectClientDevice() {
+  const ua = navigator.userAgent;
+  let deviceName = 'Desktop Browser';
+  let iconName = 'monitor';
+
+  if (/Android/i.test(ua)) {
+    deviceName = 'Android Mobile Device (Wi-Fi)';
+    iconName = 'smartphone';
+  } else if (/iPhone/i.test(ua)) {
+    deviceName = 'Apple iPhone (Wi-Fi)';
+    iconName = 'smartphone';
+  } else if (/iPad/i.test(ua)) {
+    deviceName = 'Apple iPad (Wi-Fi)';
+    iconName = 'tablet';
+  } else if (/Macintosh/i.test(ua)) {
+    deviceName = 'Apple Mac System';
+    iconName = 'laptop';
+  } else if (/Windows/i.test(ua)) {
+    deviceName = 'Windows PC Client';
+    iconName = 'monitor';
+  } else if (/Linux/i.test(ua)) {
+    deviceName = 'Linux System';
+    iconName = 'cpu';
+  }
+
+  const clientElem = document.getElementById('client-device-name');
+  const clientIcon = document.getElementById('client-device-icon');
+  if (clientElem) clientElem.innerText = deviceName;
+  if (clientIcon) {
+    clientIcon.setAttribute('data-lucide', iconName);
+    lucide.createIcons();
+  }
+}
+
 
 
 
