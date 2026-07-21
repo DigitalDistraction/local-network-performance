@@ -1282,5 +1282,126 @@ body {
   border: 1px solid #2ecc71;
 }
 
+/* ==========================================
+   MOBILE & VERTICAL PORTRAIT RESPONSIVE CSS
+   ========================================== */
+
+.mobile-bottom-nav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  /* Hide fixed desktop sidebar */
+  .sidebar {
+    display: none !important;
+  }
+
+  /* Full width main content */
+  .main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+    padding: 1rem 0.85rem 5rem 0.85rem !important;
+  }
+
+  /* Top header responsive stacking */
+  .top-header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.5rem !important;
+    padding: 0 0 1rem 0 !important;
+  }
+
+  .search-bar {
+    width: 100% !important;
+  }
+
+  .user-profile {
+    display: none !important;
+  }
+
+  /* Single column grids */
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .details-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .speed-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .dns-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .iot-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Audit Readiness Banner mobile stack */
+  .banner-top {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.75rem !important;
+  }
+
+  .banner-actions {
+    width: 100% !important;
+    flex-direction: column !important;
+  }
+
+  .banner-actions button {
+    width: 100% !important;
+  }
+
+  .active-device-banner {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.75rem !important;
+  }
+
+  /* Mobile Bottom Navigation Bar */
+  .mobile-bottom-nav {
+    display: flex !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 60px !important;
+    background: rgba(11, 12, 16, 0.95) !important;
+    backdrop-filter: blur(20px) !important;
+    border-top: 1px solid var(--card-border) !important;
+    z-index: 9999 !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+  }
+
+  .mobile-bottom-nav .nav-item {
+    flex-direction: column !important;
+    gap: 2px !important;
+    font-size: 0.65rem !important;
+    padding: 4px 0 !important;
+    border-radius: 8px !important;
+    color: var(--text-secondary) !important;
+    background: transparent !important;
+    border: none !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 20% !important;
+  }
+
+  .mobile-bottom-nav .nav-item.active {
+    color: var(--accent-cyan) !important;
+  }
+
+  .mobile-bottom-nav .nav-item i {
+    width: 20px !important;
+    height: 20px !important;
+  }
+}
+
 
 

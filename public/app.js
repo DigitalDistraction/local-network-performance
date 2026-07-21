@@ -33,17 +33,20 @@ document.addEventListener('DOMContentLoaded', () => {
    ========================================== */
 
 function initTabs() {
-  const navItems = document.querySelectorAll('.nav-menu .nav-item');
+  const allNavItems = document.querySelectorAll('.nav-item');
   const tabPanes = document.querySelectorAll('.tab-pane');
 
-  navItems.forEach(item => {
+  allNavItems.forEach(item => {
     item.addEventListener('click', () => {
       const tabName = item.getAttribute('data-tab');
-      
-      navItems.forEach(i => i.classList.remove('active'));
-      tabPanes.forEach(p => p.classList.remove('active'));
+      if (!tabName) return;
 
-      item.classList.add('active');
+      allNavItems.forEach(i => {
+        if (i.getAttribute('data-tab') === tabName) i.classList.add('active');
+        else i.classList.remove('active');
+      });
+
+      tabPanes.forEach(p => p.classList.remove('active'));
       const targetPane = document.getElementById(`tab-${tabName}`);
       if (targetPane) targetPane.classList.add('active');
     });
