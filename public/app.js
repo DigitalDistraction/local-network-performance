@@ -378,10 +378,15 @@ async function runSpeedTest() {
       uploadChunkSize = 12 * 1024 * 1024; // 12MB buffer
     }
 
-    // Allocate random buffer bytes to prevent proxy compression caching
+    // Allocate random buffer bytes safely in 64KB chunks to avoid Web Crypto quota limits (65536 bytes max per call)
     const uploadBuffer = new Uint8Array(uploadChunkSize);
     if (window.crypto && window.crypto.getRandomValues) {
-      window.crypto.getRandomValues(uploadBuffer);
+      const seedSize = 65536;
+      const seed = new Uint8Array(seedSize);
+      window.crypto.getRandomValues(seed);
+      for (let offset = 0; offset < uploadBuffer.length; offset += seedSize) {
+        uploadBuffer.set(seed.subarray(0, Math.min(seedSize, uploadBuffer.length - offset)), offset);
+      }
     }
 
     let bytesUploaded = 0;
