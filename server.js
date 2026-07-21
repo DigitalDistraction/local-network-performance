@@ -408,9 +408,17 @@ app.get('/api/dns-leak', async (req, res) => {
   }
 });
 
-// Start the server (bind strictly to 127.0.0.1 for local security)
-app.listen(PORT, '127.0.0.1', () => {
-  console.log(`Server is running at http://127.0.0.1:${PORT}`);
+// Start the server (Default: bind strictly to 127.0.0.1 for security. Use --lan for temporary mobile testing)
+const isLanMode = process.argv.includes('--lan') || process.env.HOST === '0.0.0.0';
+const HOST = isLanMode ? '0.0.0.0' : '127.0.0.1';
+
+app.listen(PORT, HOST, () => {
+  if (isLanMode) {
+    console.log(`Server running in [TEMPORARY LAN MODE] at http://0.0.0.0:${PORT}`);
+    console.log(`Accessible on your home Wi-Fi network for mobile testing.`);
+  } else {
+    console.log(`Server running in [SECURE LOCAL MODE] at http://127.0.0.1:${PORT}`);
+  }
 });
 
 /* ==========================================
